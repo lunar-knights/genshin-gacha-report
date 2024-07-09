@@ -52,18 +52,6 @@ class Runner(object):
         for item in items:
             self.gacha_query_info[item[0]] = item[1]
 
-    def _gen_query_url(self, gacha_type, page):
-        temp_gacha_info = self.gacha_query_info.copy()
-        temp_gacha_info["gacha_type"] = gacha_type2code[gacha_type]
-        temp_gacha_info["page"] = page
-        temp_gacha_info["size"] = MAX_PAGE_SIZE
-        q_list = []
-        for k in temp_gacha_info:
-            q_list.append("%s=%s" % (k, temp_gacha_info[k]))
-        q_str = "&".join(q_list)
-        query_url = QUERY_URL + "?" + q_str
-        return query_url
-
     def get_gacha_info(self):
         print("当前每页数据量：%s条" % MAX_PAGE_SIZE)
         for gacha_type in gacha_type2code:
@@ -77,6 +65,18 @@ class Runner(object):
                 res = json.loads(rep.read().decode("UTF-8"))
                 self.gacha_info[gacha_type].extend(res["data"]["list"])
                 curr_page += 1
+
+    def _gen_query_url(self, gacha_type, page):
+        temp_gacha_info = self.gacha_query_info.copy()
+        temp_gacha_info["gacha_type"] = gacha_type2code[gacha_type]
+        temp_gacha_info["page"] = page
+        temp_gacha_info["size"] = MAX_PAGE_SIZE
+        q_list = []
+        for k in temp_gacha_info:
+            q_list.append("%s=%s" % (k, temp_gacha_info[k]))
+        q_str = "&".join(q_list)
+        query_url = QUERY_URL + "?" + q_str
+        return query_url
 
     def analyse_gacha_info(self):
         all_total = 0
